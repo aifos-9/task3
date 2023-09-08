@@ -1,0 +1,113 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Task {
+    string description;
+    bool completed;
+    Task* next;
+};
+
+Task* head = NULL;
+
+void addTask(string description) {
+    Task* newTask = new Task;
+    newTask->description = description;
+    newTask->completed = false;
+    newTask->next = head;
+    head = newTask;
+    cout << "Task added successfully!" << endl;
+}
+
+void viewTasks() {
+    if (head == NULL) {
+        cout << "No tasks found." << endl;
+        return;
+    }
+    Task* current = head;
+    while (current != NULL) {
+        cout << current->description << " - " << (current->completed ? "Completed" : "Pending") << endl;
+        current = current->next;
+    }
+}
+
+void markTaskAsCompleted(string description) {
+    Task* current = head;
+    while (current != NULL) {
+        if (current->description == description) {
+            current->completed = true;
+            cout << "Task marked as completed!" << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Task not found." << endl;
+}
+
+void removeTask(string description) {
+    if (head == NULL) {
+        cout << "No tasks found." << endl;
+        return;
+    }
+    if (head->description == description) {
+        Task* temp = head;
+        head = head->next;
+        delete temp;
+        cout << "Task removed successfully!" << endl;
+        return;
+    }
+    Task* current = head;
+    while (current->next != NULL) {
+        if (current->next->description == description) {
+            Task* temp = current->next;
+            current->next = temp->next;
+            delete temp;
+            cout << "Task removed successfully!" << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Task not found." << endl;
+}
+
+int main() {
+    int choice;
+    string description;
+    while (true) {
+        cout << "1. Add task" << endl;
+        cout << "2. View tasks" << endl;
+        cout << "3. Mark task as completed" << endl;
+        cout << "4. Remove task" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "Enter task description: ";
+                cin.ignore();
+                getline(cin, description);
+                addTask(description);
+                break;
+            case 2:
+                viewTasks();
+                break;
+            case 3:
+                cout << "Enter task description: ";
+                cin.ignore();
+                getline(cin, description);
+                markTaskAsCompleted(description);
+                break;
+            case 4:
+                cout << "Enter task description: ";
+                cin.ignore();
+                getline(cin, description);
+                removeTask(description);
+                break;
+            case 5:
+                cout << "Exiting program..." << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+}
